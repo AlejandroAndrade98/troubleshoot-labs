@@ -2,24 +2,39 @@ import { useEffect, useRef, useState } from "react";
 import type { Scenario, GameContext } from "../engine/types";
 import { evaluateCommand } from "../engine/engine";
 
-type Props = { scenario: Scenario; ctx: GameContext };
+type Props = {
+  scenario: Scenario;
+  ctx: GameContext;
+  inputRef?: React.MutableRefObject<HTMLInputElement | null>;
+  onCommand?: (raw: string) => void;
+};
 
-export default function Terminal({ scenario, ctx }: Props) {
+export default function Terminal({ scenario, ctx, inputRef, onCommand }: Props) {
   const [lines, setLines] = useState<string[]>([
     `Scenario: ${scenario.name}`,
     scenario.intro,
-    "Escribe 'help' para ver comandos.",
+    "Type 'help' to see available commands.",
   ]);
   const [input, setInput] = useState("");
   const bottomRef = useRef<HTMLDivElement>(null);
+  const internalInputRef = useRef<HTMLInputElement>(null);
 
   useEffect(() => {
     bottomRef.current?.scrollIntoView({ behavior: "smooth" });
   }, [lines]);
 
+  useEffect(() => {
+    if (inputRef && internalInputRef.current) {
+      inputRef.current = internalInputRef.current; // OK: MutableRefObject & allows null
+    }
+  }, [inputRef]);
+
   const run = () => {
     const cmd = input.trim();
     if (!cmd) return;
+
+    onCommand?.(cmd);
+
     const res = evaluateCommand(cmd, scenario, ctx);
 
     setLines((prev) => {
@@ -46,17 +61,21 @@ export default function Terminal({ scenario, ctx }: Props) {
 
       <div className="mt-3 flex items-center gap-2">
         <span className="font-mono text-xs opacity-70">
-          {ctx.completed ? "✔️ DONE" : "PS C:\\>"} 
+          {ctx.completed ? "✔️ DONE" : "PS C:\\>"}
         </span>
         <input
+          ref={internalInputRef}
           className="flex-1 rounded-lg border border-neutral-300 dark:border-neutral-700 bg-transparent px-3 py-2 outline-none"
-          placeholder="Escribe un comando… (help, hint, clear)"
+          placeholder="Type a command… (help, hint, clear)"
           value={input}
           onChange={(e) => setInput(e.target.value)}
           onKeyDown={onKey}
           autoFocus
         />
-        <button className="rounded-lg px-3 py-2 bg-black text-white dark:bg-white dark:text-black" onClick={run}>
+        <button
+          className="rounded-lg px-3 py-2 bg-black text-white dark:bg-white dark:text-black"
+          onClick={run}
+        >
           Run
         </button>
       </div>
