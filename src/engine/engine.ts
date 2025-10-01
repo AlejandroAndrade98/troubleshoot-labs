@@ -16,36 +16,36 @@ export function evaluateCommand(raw: string, scenario: Scenario, ctx: GameContex
   const input = raw.trim();
   const low = input.toLowerCase();
 
-  // Utilitarios globales
+  // Global utilities
   if (low === "help") {
     return {
       ok: true,
       out:
-        "Comandos: help, hint, clear/cls, whoami, ipconfig, ping <host> [-n N], tracert <host>, dir, cd",
+        "Commands: help, hint, clear/cls, whoami, ipconfig, ping <host> [-n N], tracert <host>, dir, cd",
     };
   }
   if (low === "hint") {
     const step = scenario.steps[ctx.stepIndex];
-    return { ok: true, out: step?.hint ?? "Sin pista para este paso." };
+    return { ok: true, out: step?.hint ?? "No hint available for this step." };
   }
   if (low === "clear" || low === "cls") {
     return { ok: true, out: "__CLEAR__" };
   }
 
-  // Escenario terminado
+  // Scenario completed
   const current = scenario.steps[ctx.stepIndex];
   if (!current) {
-    // ¿Coincide con pasos pasados? (mensaje amable)
+    // Check if it matches a past step (friendly message)
     for (let i = 0; i < scenario.steps.length; i++) {
       const tmp = cloneCtx(ctx);
       if (scenario.steps[i].validate(input, tmp)) {
-        return { ok: true, out: "Ese comando es válido, pero el escenario ya está completado. 🎉" };
+        return { ok: true, out: "That command is valid, but the scenario is already completed. 🎉" };
       }
     }
-    return { ok: false, out: "Escenario completado. Usa 'help' o cambia de escenario." };
+    return { ok: false, out: "Scenario finished. Use 'help' or switch to another scenario." };
   }
 
-  // 1) ¿Cumple paso actual?
+  // 1) Does it match the current step?
   const okCurrent = current.validate(input, ctx);
   if (okCurrent) {
     ctx.stepIndex += 1;
@@ -55,33 +55,33 @@ export function evaluateCommand(raw: string, scenario: Scenario, ctx: GameContex
     return {
       ok: true,
       out: done
-        ? `${msg}\n✅ Escenario completado.`
-        : `${msg}\n➡️ Siguiente paso: ${scenario.steps[ctx.stepIndex].title}`,
+        ? `${msg}\n✅ Scenario completed.`
+        : `${msg}\n➡️ Next step: ${scenario.steps[ctx.stepIndex].title}`,
     };
   }
 
-  // 2) ¿Coincide con paso ya completado?
+  // 2) Does it match a step already completed?
   for (let i = 0; i < ctx.stepIndex; i++) {
     const tmp = cloneCtx(ctx);
     if (scenario.steps[i].validate(input, tmp)) {
       return {
         ok: true,
-        out: `Comando correcto, pero ese paso ya fue completado: “${scenario.steps[i].title}”.\n➡️ Ahora: ${current.title}`,
+        out: `Correct command, but that step was already completed: “${scenario.steps[i].title}”.\n➡️ Current step: ${current.title}`,
       };
     }
   }
 
-  // 3) ¿Coincide con un paso futuro?
+  // 3) Does it match a future step?
   for (let j = ctx.stepIndex + 1; j < scenario.steps.length; j++) {
     const tmp = cloneCtx(ctx);
     if (scenario.steps[j].validate(input, tmp)) {
       return {
         ok: false,
-        out: `Aún no: ese comando corresponde a un paso posterior (“${scenario.steps[j].title}”).\n➡️ Primero: ${current.title}`,
+        out: `Not yet: that command belongs to a future step (“${scenario.steps[j].title}”).\n➡️ Current step: ${current.title}`,
       };
     }
   }
 
-  // 4) Error genérico
-  return { ok: false, out: "❌ No es el comando/resultado esperado para este paso. Prueba 'hint'." };
+  // 4) Generic error
+  return { ok: false, out: "❌ That is not the expected command/result for this step. Try 'hint'." };
 }
