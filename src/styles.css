@@ -1,0 +1,25 @@
+/* styles.css */
+@import "tailwindcss";
+
+/* Tokens/diseño global opcional */
+@theme {
+  /* Ejemplos: sobreescribe o agrega variables */
+  --color-brand: #2563eb;
+  --font-sans: ui-sans-serif, system-ui, Avenir, Helvetica, Arial, sans-serif;
+}
+
+/* Estilos base opcionales */
+@layer base {
+  :root {
+    color-scheme: light dark;
+  }
+  html, body, #root {
+    height: 100%;
+  }
+  a { font-weight: 500; }
+}
+
+/* Utilidad personalizada (reemplaza antiguos components/utilities) */
+@utility btn {
+  @apply inline-flex items-center gap-2 px-4 py-2 rounded-lg bg-[--color-brand] text-white hover:opacity-90 transition;
+}
