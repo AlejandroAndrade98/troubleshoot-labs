@@ -28,7 +28,7 @@ export default function App() {
         <div className="mx-auto max-w-5xl px-4 py-3">
           <div className="flex items-center justify-between">
             <h1 className="text-lg font-semibold">🧪 Troubleshoot Labs</h1>
-            <nav className="text-sm opacity-80">v0.3 • Tailwind v4</nav>
+            <nav className="text-sm opacity-80">v0.1 Alejandro</nav>
           </div>
 
           {/* Tabs */}
