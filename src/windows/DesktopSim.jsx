@@ -309,7 +309,7 @@ function Taskbar({
                 <div className="font-medium flex items-center gap-2">
                   <span>🌐</span> <span>Edge (simulated)</span>
                 </div>
-                <div className="text-xs opacity-70 mt-1">Open a fake browser window</div>
+                <div className="text-xs opacity-70 mt-1">Open a browser window</div>
               </button>
             </div>
 
@@ -394,7 +394,7 @@ function CoachOverlay({ containerRef, targetRef, text, step }) {
     <div className="absolute inset-0 pointer-events-none z-[60]">
       <div className="absolute rounded-xl ring-4 ring-red-500/60 transition" style={{ left: pos.x - 6, top: pos.y - 6, width: pos.w + 12, height: pos.h + 12 }} />
       <div className="absolute -translate-x-1/2 -translate-y-1/2 w-7 h-7 rounded-full bg-red-600 text-white text-sm font-semibold grid place-items-center shadow" style={{ left: pos.x + pos.w, top: pos.y - 10 }}>{step}</div>
-      <div className="absolute rounded-lg bg-neutral-900 text-white text-sm shadow-xl p-3" style={{ left: calloutX, top: calloutY, width: CALLOUT_WIDTH }}>{text}</div>
+      <div className="absolute rounded-lg bg-white text-black text-sm shadow-xl p-3" style={{ left: calloutX, top: calloutY, width: CALLOUT_WIDTH }}>{text}</div>
       <svg className="absolute pointer-events-none" style={{ left: 0, top: 0, width: "100%", height: "100%" }}>
         <defs><marker id="arrowhead" markerWidth="8" markerHeight="8" refX="4" refY="4" orient="auto"><polygon points="0 0, 8 4, 0 8" fill="#ef4444" /></marker></defs>
         <line x1={calloutX + CALLOUT_WIDTH / 2} y1={calloutY + 70} x2={pos.x + pos.w / 2} y2={pos.y - 8} stroke="#ef4444" strokeWidth="3" markerEnd="url(#arrowhead)" />

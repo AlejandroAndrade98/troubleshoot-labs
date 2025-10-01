@@ -304,7 +304,7 @@ function Taskbar({
                 <div className="font-medium flex items-center gap-2">
                   <span>＞_</span> <span>Terminal (simulated)</span>
                 </div>
-                <div className="text-xs opacity-70 mt-1">Open a fake Windows terminal</div>
+                <div className="text-xs opacity-70 mt-1">Open a Windows terminal</div>
               </button>
             </div>
           </div>
